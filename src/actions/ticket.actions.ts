@@ -59,3 +59,47 @@ export async function createTicket(
     };
   }
 }
+
+export async function getTickets() {
+  try {
+    const tickets = await prisma.ticket.findMany({
+      orderBy: { createdAt: "desc" },
+    });
+    logEvent(
+      "Fetched ticket list",
+      "ticket",
+      {
+        count: tickets.length,
+      },
+      "info"
+    );
+
+    return tickets;
+  } catch (error) {
+    logEvent("Error fetching ticket list", "ticket", {}, "error", error);
+    return [];
+  }
+}
+
+export async function getTicketById(id: string) {
+  try {
+    const ticket = await prisma.ticket.findUnique({
+      where: { id: Number(id) },
+    });
+
+    if (!ticket) {
+      logEvent("Ticket not found", "ticket", { ticketId: id }, "warning");
+    }
+
+    return ticket;
+  } catch (error) {
+    logEvent(
+      "Error fetching ticket details",
+      "ticket",
+      { ticketId: id },
+      "error",
+      error
+    );
+    return null;
+  }
+}
