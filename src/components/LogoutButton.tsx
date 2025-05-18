@@ -3,11 +3,8 @@
 import { useActionState, useEffect } from "react";
 import { logoutUser } from "@/actions/auth.actions";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
 
 const LogoutButton = () => {
-  const router = useRouter();
-
   const initialState = {
     success: false,
     message: "",
@@ -18,12 +15,10 @@ const LogoutButton = () => {
   useEffect(() => {
     if (state.success) {
       toast.success("Logout successful");
-      router.push("/login");
-      router.refresh();
     } else if (state.message) {
       toast.error(state.message);
     }
-  }, [state, router]);
+  }, [state]);
 
   return (
     <form action={formAction}>
